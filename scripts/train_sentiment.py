@@ -39,8 +39,12 @@ training_args = TrainingArguments(
     save_strategy='epoch',
     num_train_epochs=10,
     learning_rate=1e-05,
-    per_gpu_train_batch_size=16,
-    per_gpu_eval_batch_size=16,
+    # pytorch 2.0.0 specific args
+    torch_compile=True,
+    bf16=True,
+    optim='adamw_torch_fused',
+    per_device_train_batch_size=16,
+    per_device_eval_batch_size=16,
     load_best_model_at_end=True,
     metric_for_best_model='recall',
 )
