@@ -27,8 +27,9 @@ tokenized_datasets = dataset.map(tokenize_function, batched=True)
 # augment train set with test set, for downstream apps only - DO NOT EVALUATE ON TEST
 # tokenized_datasets['train+test'] = concatenate_datasets([tokenized_datasets['train'],
 #                                                          tokenized_datasets['test']])
-
-model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=3)
+id2label = {"0": "negative", "1": "neutral", "2": "positive"}
+label2id = {"negative": 0, "neutral": 1, "positive": 2}
+model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=3, id2label=id2label, label2id=label2id)
 
 training_args = TrainingArguments(
     do_eval=True,
@@ -60,9 +61,7 @@ trainer = Trainer(
 )
 
 trainer.train()
-
 trainer.create_model_card()
-trainer.save_model('saved_model')
-
+trainer.save_model('/workspace/timelms/scripts/saved_model')
 # res = trainer.evaluate(tokenized_datasets['test'])
 # print(res)
